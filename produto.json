@@ -1,0 +1,9 @@
+{
+    "name": "celular samsung s20",
+    "price": 2000,
+    "tags": ["hardware", "samsung"],
+    "details": {
+      "memory": "16GB",
+      "SSD": "128GB"
+    }
+  }

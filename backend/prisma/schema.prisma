@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+model Usuario {
+  id            String         @id @default(uuid()) @db.Char(40)
+  tipoUsuario   TipoUsuario    @relation(fields: [tipoUsuarioId], references: [id])
+  tipoUsuarioId String         @db.VarChar(40)
+  nome          String         @db.VarChar(100)
+  email         String         @unique @db.VarChar(100)
+  senha         String         @db.Char(60)
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+  ItemCarrinho  ItemCarrinho[]
+
+  @@map("usuarios")
+}
+
+model TipoUsuario {
+  id      String    @id @default(uuid()) @db.Char(40)
+  rotulo  String    @db.VarChar(10)
+  Usuario Usuario[]
+
+  @@map("tipos_usuarios")
+}
+
+model Produto {
+  id           String         @id @default(uuid()) @db.Char(40)
+  nome         String         @unique @db.VarChar(100)
+  preco        Decimal        @db.Decimal(10, 0)
+  estoque      Int            @db.Int
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+  ItemCarrinho ItemCarrinho[]
+
+  @@map("produtos")
+}
+
+model ItemCarrinho {
+  id         String   @id @default(uuid()) @db.Char(40)
+  produto    Produto  @relation(fields: [produtoId], references: [id])
+  produtoId  String   @db.Char(40)
+  quantidade Int      @db.Int
+  nome         String         @unique @db.VarChar(100)
+  estoque      Int            @db.Int
+  usuario    Usuario  @relation(fields: [usuarioId], references: [id])
+  usuarioId  String   @db.Char(40)
+  preco        Decimal        @db.Decimal(10, 0)
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@map("itens_carrinho")
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
