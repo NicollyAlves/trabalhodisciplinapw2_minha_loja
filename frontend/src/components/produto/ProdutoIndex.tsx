@@ -25,7 +25,7 @@ function ProdutoIndex() {
       </div>
 
       <List>
-        { produtos.map((prod) => (
+        {Array.isArray(produtos) && produtos.map((prod) => (
         <>
           <Divider key={prod.id} variant="inset" component="li" />
             <Link href={`/produto/${prod.id}`}>
